@@ -1,11 +1,15 @@
 import type { MDXComponents } from "mdx/types";
+import Image from "next/image";
 import type { ComponentPropsWithoutRef } from "react";
 
 export const mdxComponents: MDXComponents = {
-  // Hide h1 since we render the title in the hero
-  h1: () => null,
-
   // Headings with refined typography
+  h1: (props: ComponentPropsWithoutRef<"h1">) => (
+    <h1
+      className="mt-12 mb-4 font-bold text-3xl text-black tracking-tight dark:text-white"
+      {...props}
+    />
+  ),
   h2: (props: ComponentPropsWithoutRef<"h2">) => (
     <h2
       className="mt-12 mb-4 font-semibold text-2xl text-black tracking-tight dark:text-white"
@@ -113,10 +117,14 @@ export const mdxComponents: MDXComponents = {
 
   // Images
   img: (props: ComponentPropsWithoutRef<"img">) => (
-    <img
-      className="my-8 rounded-lg shadow-sm"
-      {...props}
+    <Image
       alt={props.alt || ""}
+      className="my-8 h-auto w-full rounded-lg shadow-sm"
+      height={600}
+      sizes="100vw"
+      src={(props.src as string) || ""}
+      style={{ width: "100%", height: "auto" }}
+      width={800}
     />
   ),
 };

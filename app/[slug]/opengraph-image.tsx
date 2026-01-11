@@ -1,9 +1,13 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { generateStaticParams, getPost } from "@/app/lib/posts";
+import { getPost } from "@/app/lib/posts";
 
-export { generateStaticParams };
+export { generateStaticParams } from "@/app/lib/posts";
+
+// Regex at top level for performance
+const FONT_URL_REGEX =
+  /src: url\(([^)]+)\) format\(['"](?:truetype|woff2)['"]\)/;
 
 export const size = {
   width: 1200,
@@ -27,9 +31,7 @@ export default async function Image({
   ).then((res) => res.text());
 
   // Extract the font URL from the CSS (ttf or woff2)
-  const fontUrlMatch = fontCss.match(
-    /src: url\(([^)]+)\) format\(['"](?:truetype|woff2)['"]\)/
-  );
+  const fontUrlMatch = fontCss.match(FONT_URL_REGEX);
   const fontUrl = fontUrlMatch?.[1];
 
   const stixFont = fontUrl
@@ -88,6 +90,7 @@ export default async function Image({
           marginTop: "40px",
         }}
       >
+        {/* biome-ignore lint/performance/noImgElement: ImageResponse requires native img element */}
         <img
           alt="Bryce Bjork"
           height={64}

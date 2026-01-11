@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
-import { generateStaticParams, getPost } from "@/app/lib/posts";
+import { getPost } from "@/app/lib/posts";
 import { mdxComponents } from "@/mdx-components";
 
-export { generateStaticParams };
+export { generateStaticParams } from "@/app/lib/posts";
 
 interface Props {
   params: Promise<{ slug: string }>;
