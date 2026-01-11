@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { getPost } from "@/app/lib/posts";
 
@@ -38,10 +36,6 @@ export default async function Image({
     ? await fetch(fontUrl).then((res) => res.arrayBuffer())
     : null;
 
-  // Read profile image as base64
-  const imageData = readFileSync(join(process.cwd(), "public", "bryce.jpg"));
-  const base64Image = `data:image/jpeg;base64,${imageData.toString("base64")}`;
-
   return new ImageResponse(
     <div
       style={{
@@ -68,7 +62,7 @@ export default async function Image({
       >
         <div
           style={{
-            fontSize: 64,
+            fontSize: 120,
             fontFamily: "STIX Two Text",
             fontWeight: 700,
             color: "#000000",
@@ -79,36 +73,6 @@ export default async function Image({
         >
           {metadata.title}
         </div>
-      </div>
-
-      {/* Author section */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "20px",
-          marginTop: "40px",
-        }}
-      >
-        {/* biome-ignore lint/performance/noImgElement: ImageResponse requires native img element */}
-        <img
-          alt="Bryce Bjork"
-          height={64}
-          src={base64Image}
-          style={{
-            borderRadius: "50%",
-          }}
-          width={64}
-        />
-        <span
-          style={{
-            fontSize: 28,
-            fontFamily: "STIX Two Text",
-            color: "#52525b",
-          }}
-        >
-          Bryce Bjork
-        </span>
       </div>
     </div>,
     {
