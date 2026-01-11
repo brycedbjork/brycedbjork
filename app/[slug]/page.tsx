@@ -9,6 +9,39 @@ import { mdxComponents } from "@/mdx-components";
 
 export { generateStaticParams } from "@/app/lib/posts";
 
+// Regex patterns for stripping markdown (defined at top level for performance)
+const FRONTMATTER_REGEX = /^---[\s\S]*?---/m;
+const CODE_BLOCK_REGEX = /```[\s\S]*?```/g;
+const INLINE_CODE_REGEX = /`[^`]+`/g;
+const IMAGE_REGEX = /!\[.*?\]\(.*?\)/g;
+const LINK_REGEX = /\[([^\]]+)\]\([^)]+\)/g;
+const HEADING_REGEX = /#{1,6}\s+/g;
+const EMPHASIS_REGEX = /[*_~]+([^*_~]+)[*_~]+/g;
+const BLOCKQUOTE_REGEX = />\s+/g;
+const LIST_MARKER_REGEX = /-\s+/g;
+const NEWLINE_REGEX = /\n+/g;
+const WHITESPACE_REGEX = /\s+/g;
+
+function getExcerpt(content: string, maxLength = 160): string {
+  // Strip MDX/Markdown syntax to get plain text
+  const plainText = content
+    .replace(FRONTMATTER_REGEX, "")
+    .replace(CODE_BLOCK_REGEX, "")
+    .replace(INLINE_CODE_REGEX, "")
+    .replace(IMAGE_REGEX, "")
+    .replace(LINK_REGEX, "$1")
+    .replace(HEADING_REGEX, "")
+    .replace(EMPHASIS_REGEX, "$1")
+    .replace(BLOCKQUOTE_REGEX, "")
+    .replace(LIST_MARKER_REGEX, "")
+    .replace(NEWLINE_REGEX, " ")
+    .replace(WHITESPACE_REGEX, " ")
+    .trim();
+
+  if (plainText.length <= maxLength) return plainText;
+  return `${plainText.slice(0, maxLength).trim()}...`;
+}
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", {
@@ -24,16 +57,20 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const { metadata } = getPost(slug);
+  const { metadata, content } = getPost(slug);
+  const description = getExcerpt(content);
 
   return {
     title: metadata.title,
+    description,
     openGraph: {
       title: metadata.title,
+      description,
     },
     twitter: {
       card: "summary_large_image",
       title: metadata.title,
+      description,
     },
   };
 }
