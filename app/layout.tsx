@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://brycebjork.com"),
   title: "Bryce Bjork",
   description: "Bryce Bjork's personal website",
   icons: {

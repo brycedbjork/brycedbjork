@@ -20,10 +20,21 @@ export default async function Image({
   const { slug } = await params;
   const { metadata } = getPost(slug);
 
-  // Load STIX Two Text font
-  const stixFont = await fetch(
-    "https://fonts.gstatic.com/s/stixtwotext/v12/YA9Gr02F12Xkf5whdwKf11l0jbKkn9jFJ3577w.woff"
-  ).then((res) => res.arrayBuffer());
+  // Load STIX Two Text font - fetch CSS first to get the actual font URL
+  const fontCss = await fetch(
+    "https://fonts.googleapis.com/css2?family=STIX+Two+Text:wght@700&display=swap",
+    { headers: { "User-Agent": "Mozilla/5.0" } }
+  ).then((res) => res.text());
+
+  // Extract the font URL from the CSS (ttf or woff2)
+  const fontUrlMatch = fontCss.match(
+    /src: url\(([^)]+)\) format\(['"](?:truetype|woff2)['"]\)/
+  );
+  const fontUrl = fontUrlMatch?.[1];
+
+  const stixFont = fontUrl
+    ? await fetch(fontUrl).then((res) => res.arrayBuffer())
+    : null;
 
   // Read profile image as base64
   const imageData = readFileSync(join(process.cwd(), "public", "bryce.jpg"));
@@ -99,14 +110,16 @@ export default async function Image({
     </div>,
     {
       ...size,
-      fonts: [
-        {
-          name: "STIX Two Text",
-          data: stixFont,
-          style: "normal",
-          weight: 700,
-        },
-      ],
+      fonts: stixFont
+        ? [
+            {
+              name: "STIX Two Text",
+              data: stixFont,
+              style: "normal" as const,
+              weight: 700 as const,
+            },
+          ]
+        : [],
     }
   );
 }
