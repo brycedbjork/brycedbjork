@@ -1,30 +1,18 @@
-import fs from "node:fs";
-import path from "node:path";
-import matter from "gray-matter";
 import Image from "next/image";
 import Link from "next/link";
+import { getAllPosts } from "./lib/posts";
 
-interface PostMetadata {
-  title: string;
-  slug: string;
-}
-
-function getPosts(): PostMetadata[] {
-  const contentDir = path.join(process.cwd(), "content");
-  const files = fs
-    .readdirSync(contentDir)
-    .filter((file) => file.endsWith(".mdx"));
-
-  return files.map((file) => {
-    const filePath = path.join(contentDir, file);
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const { data } = matter(fileContent);
-    return data as PostMetadata;
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
   });
 }
 
 export default async function Home() {
-  const posts = await getPosts();
+  const posts = getAllPosts();
 
   return (
     <main className="min-h-screen bg-white px-6 py-16 dark:bg-black">
@@ -49,8 +37,10 @@ export default async function Home() {
               entrepreneur
             </Link>
             , <Link href="https://github.com/brycebjork">developer</Link>, and
-            designer. My mission is to advance human development with AI.
-            Currently the Co-Founder and CTO of{" "}
+            designer. I've actively coded since I was 10, started my first
+            company at 15, and studied Economics at Yale. My mission is to
+            advance human development with AI. Currently, I'm currently the
+            Co-Founder and CTO of{" "}
             <Link href="https://www.lenny.com">Lenny</Link>.
           </p>
         </div>
@@ -61,13 +51,19 @@ export default async function Home() {
           </h2>
           <ul className="space-y-2">
             {posts.map((post) => (
-              <li key={post.slug}>
+              <li
+                className="flex items-center justify-between gap-4"
+                key={post.slug}
+              >
                 <Link
                   className="text-lg text-zinc-600 underline decoration-zinc-300 underline-offset-4 transition-colors hover:text-black hover:decoration-zinc-500 dark:text-zinc-400 dark:decoration-zinc-600 dark:hover:text-white dark:hover:decoration-zinc-400"
                   href={`/${post.slug}`}
                 >
                   {post.title}
                 </Link>
+                <span className="shrink-0 text-sm text-zinc-400 dark:text-zinc-500">
+                  {formatDate(post.published)}
+                </span>
               </li>
             ))}
           </ul>

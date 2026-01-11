@@ -110,6 +110,104 @@ a:hover {
   line-height: 1.6;
 }
 
+/* Footnote styling - inline reference */
+.prose-article sup a[data-footnote-ref] {
+  font-size: 0.7rem;
+  color: #a1a1aa;
+  text-decoration: none;
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .prose-article sup a[data-footnote-ref] {
+    color: #71717a;
+  }
+}
+
+/* Footnotes section */
+.prose-article section[data-footnotes] {
+  margin-top: 3rem;
+  margin-left: 0;
+  padding-left: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.prose-article section[data-footnotes] > h2 {
+  display: none;
+}
+
+/* Hide the hr separator before footnotes */
+.prose-article > hr:has(+ section[data-footnotes]),
+.prose-article section[data-footnotes] > hr {
+  display: none;
+}
+
+.prose-article section[data-footnotes] ol {
+  margin: 0;
+  padding: 0;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  list-style: none;
+  counter-reset: footnote;
+}
+
+.prose-article section[data-footnotes] li {
+  color: #a1a1aa;
+  margin-bottom: 0.75rem;
+  margin-left: 0;
+  padding-left: 0;
+  font-size: 0.85rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem;
+  counter-increment: footnote;
+}
+
+.prose-article section[data-footnotes] li::before {
+  content: counter(footnote) ".";
+  color: #a1a1aa;
+}
+
+.prose-article section[data-footnotes] li p {
+  display: inline;
+  margin: 0;
+  font-size: 0.85rem;
+  color: #a1a1aa;
+}
+
+.prose-article section[data-footnotes] li a {
+  color: #a1a1aa;
+  text-decoration: underline;
+  text-decoration-color: #d4d4d8;
+  pointer-events: auto;
+}
+
+.prose-article section[data-footnotes] li a:hover {
+  color: #71717a;
+}
+
+.prose-article section[data-footnotes] a[data-footnote-backref] {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .prose-article section[data-footnotes] li,
+  .prose-article section[data-footnotes] li p,
+  .prose-article section[data-footnotes] li::before {
+    color: #71717a;
+  }
+
+  .prose-article section[data-footnotes] li a {
+    color: #71717a;
+    text-decoration-color: #3f3f46;
+  }
+
+  .prose-article section[data-footnotes] li a:hover {
+    color: #a1a1aa;
+  }
+}
+
 /* Syntax highlighting - use shiki CSS variables for theming */
 pre[data-theme] {
   background-color: var(--shiki-light-bg);

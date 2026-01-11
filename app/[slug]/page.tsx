@@ -3,21 +3,26 @@ import Image from "next/image";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
 import { getPost } from "@/app/lib/posts";
 import { mdxComponents } from "@/mdx-components";
 
 export { generateStaticParams } from "@/app/lib/posts";
 
-interface Props {
-  params: Promise<{ slug: string }>;
-}
-
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const { metadata } = getPost(slug);
 
@@ -26,7 +31,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function BlogPost({ params }: Props) {
+export default async function BlogPost({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const { metadata, content } = getPost(slug);
 
@@ -64,6 +73,7 @@ export default async function BlogPost({ params }: Props) {
             components={mdxComponents}
             options={{
               mdxOptions: {
+                remarkPlugins: [remarkGfm],
                 rehypePlugins: [
                   [
                     rehypePrettyCode,
@@ -84,5 +94,3 @@ export default async function BlogPost({ params }: Props) {
     </main>
   );
 }
-
-export const dynamicParams = false;

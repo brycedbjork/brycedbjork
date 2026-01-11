@@ -16,7 +16,8 @@
     "next-mdx-remote": "^5.0.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "rehype-pretty-code": "^0.14.1"
+    "rehype-pretty-code": "^0.14.1",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.11",

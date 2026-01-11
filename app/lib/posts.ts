@@ -13,7 +13,7 @@ export function getPost(slug: string) {
   const filePath = path.join(process.cwd(), "content", `${slug}.mdx`);
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(fileContent);
-  return { metadata: data as PostMetadata, content };
+  return { metadata: { ...data, slug } as PostMetadata, content };
 }
 
 export function getAllPosts(): PostMetadata[] {
@@ -23,10 +23,11 @@ export function getAllPosts(): PostMetadata[] {
     .filter((file) => file.endsWith(".mdx"));
 
   return files.map((file) => {
+    const slug = file.replace(".mdx", "");
     const filePath = path.join(contentDir, file);
     const fileContent = fs.readFileSync(filePath, "utf-8");
     const { data } = matter(fileContent);
-    return data as PostMetadata;
+    return { ...data, slug } as PostMetadata;
   });
 }
 
