@@ -15,20 +15,23 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://brycebjork.com"),
   title: "Bryce Bjork",
-  description: "Bryce Bjork's personal website",
+  description:
+    "I'm an entrepreneur, developer, and designer. I've actively coded since I was 10, started my first company at 15, and studied Economics at Yale.",
   icons: {
     icon: "/bryce.jpg",
     apple: "/bryce.jpg",
   },
   openGraph: {
     title: "Bryce Bjork",
-    description: "Bryce Bjork's personal website",
+    description:
+      "I'm an entrepreneur, developer, and designer. I've actively coded since I was 10, started my first company at 15, and studied Economics at Yale.",
     images: ["/bryce.jpg"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Bryce Bjork",
-    description: "Bryce Bjork's personal website",
+    description:
+      "I'm an entrepreneur, developer, and designer. I've actively coded since I was 10, started my first company at 15, and studied Economics at Yale.",
     images: ["/bryce.jpg"],
   },
 };
