@@ -22,5 +22,113 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-stix-two-text), serif;
+}
+
+/* Custom text selection */
+::selection {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  ::selection {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* Prose article styling */
+.prose-article {
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+/* Code block scrollbar styling */
+.prose-article pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.prose-article pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.prose-article pre::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.prose-article pre::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Link styling - elegant underline like blog posts */
+a {
+  color: #000;
+  text-decoration: underline;
+  text-decoration-color: #d4d4d8;
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+a:hover {
+  text-decoration-color: #52525b;
+}
+
+@media (prefers-color-scheme: dark) {
+  a {
+    color: #fff;
+    text-decoration-color: #3f3f46;
+  }
+
+  a:hover {
+    text-decoration-color: #d4d4d8;
+  }
+}
+
+/* List styling */
+.prose-article ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.prose-article ul li {
+  padding-left: 0.25rem;
+}
+
+/* Nested list styling */
+.prose-article ul ul,
+.prose-article ol ol,
+.prose-article ul ol,
+.prose-article ol ul {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Code block syntax highlighting overrides */
+.prose-article pre code {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Syntax highlighting - use shiki CSS variables for theming */
+pre[data-theme] {
+  background-color: var(--shiki-light-bg);
+}
+
+pre[data-theme] code {
+  background: transparent;
+}
+
+pre[data-theme] span {
+  color: var(--shiki-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  pre[data-theme] {
+    background-color: var(--shiki-dark-bg);
+  }
+
+  pre[data-theme] span {
+    color: var(--shiki-dark);
+  }
 }
