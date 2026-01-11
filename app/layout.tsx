@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://brycebjork.com"),
+  metadataBase: new URL("https://brycedbjork.com"),
   title: "Bryce Bjork",
   description:
     "I'm an entrepreneur, developer, and designer. I've actively coded since I was 10, started my first company at 15, and studied Economics at Yale.",
