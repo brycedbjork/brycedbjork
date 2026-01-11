@@ -39,9 +39,8 @@ export default async function Home() {
             , <Link href="https://github.com/brycedbjork">developer</Link>, and
             designer. I've actively coded since I was 10, started my first
             company at 15, and studied Economics at Yale. My mission is to
-            advance human development with AI. Currently, I'm currently the
-            Co-Founder and CTO of{" "}
-            <Link href="https://www.lenny.com">Lenny</Link>.
+            advance human development with AI. Currently, I'm the Co-Founder and
+            CTO of <Link href="https://www.lenny.com">Lenny</Link>.
           </p>
         </div>
 
