@@ -11,6 +11,9 @@ export interface PostMetadata {
 
 export function getPost(slug: string) {
   const filePath = path.join(process.cwd(), "content", `${slug}.mdx`);
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(fileContent);
   return { metadata: { ...data, slug } as PostMetadata, content };

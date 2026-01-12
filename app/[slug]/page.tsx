@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
@@ -57,7 +58,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const { metadata, content } = getPost(slug);
+  const post = getPost(slug);
+  if (!post) return {};
+  const { metadata, content } = post;
   const description = getExcerpt(content);
 
   return {
@@ -81,7 +84,9 @@ export default async function BlogPost({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { metadata, content } = getPost(slug);
+  const post = getPost(slug);
+  if (!post) notFound();
+  const { metadata, content } = post;
 
   return (
     <main className="min-h-screen bg-white px-6 py-16 dark:bg-black">

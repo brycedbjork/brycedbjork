@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { getPost } from "@/app/lib/posts";
 
@@ -18,7 +19,7 @@ export const size = {
 
 export const contentType = "image/png";
 
-// Extract a teaser from the content - ~5 lines worth
+// Extract a teaser from the content - ~4 lines worth
 function extractTeaser(content: string): string {
   // Remove frontmatter and footnotes
   const cleaned = content
@@ -27,17 +28,17 @@ function extractTeaser(content: string): string {
     .replace(BOLD_REGEX, "")
     .trim();
 
-  // Get first few sentences (~450 chars for 5 lines)
+  // Get first few sentences (~360 chars for 4 lines)
   const sentences = cleaned.split(SENTENCE_SPLIT_REGEX);
   let teaser = "";
   for (const sentence of sentences) {
-    if (teaser.length + sentence.length > 450) break;
+    if (teaser.length + sentence.length > 360) break;
     teaser += (teaser ? " " : "") + sentence.trim();
   }
 
   // Truncate if still too long, always add ellipsis
-  if (teaser.length > 450) {
-    return `${teaser.slice(0, 447)}...`;
+  if (teaser.length > 360) {
+    return `${teaser.slice(0, 357)}...`;
   }
   return `${teaser}...`;
 }
@@ -48,11 +49,13 @@ export default async function Image({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { metadata, content } = getPost(slug);
+  const post = getPost(slug);
+  if (!post) notFound();
+  const { metadata, content } = post;
   const teaser = extractTeaser(content);
 
-  // Load STIX Two Text fonts - fetch CSS first to get the actual font URLs
-  const [stixRegularCss, stixBoldCss] = await Promise.all([
+  // Load STIX Two Text fonts and profile image
+  const [stixRegularCss, stixBoldCss, profileImageData] = await Promise.all([
     fetch(
       "https://fonts.googleapis.com/css2?family=STIX+Two+Text:wght@400&display=swap",
       { headers: { "User-Agent": "Mozilla/5.0" } }
@@ -61,6 +64,7 @@ export default async function Image({
       "https://fonts.googleapis.com/css2?family=STIX+Two+Text:wght@700&display=swap",
       { headers: { "User-Agent": "Mozilla/5.0" } }
     ).then((res) => res.text()),
+    fetch("https://brycedbjork.com/bryce.jpg").then((res) => res.arrayBuffer()),
   ]);
 
   // Extract the font URLs from the CSS
@@ -97,10 +101,43 @@ export default async function Image({
           color: "#18181b", // zinc-900
           lineHeight: 1.1,
           letterSpacing: "-0.02em",
-          marginBottom: "32px",
+          marginBottom: "24px",
         }}
       >
         {metadata.title}
+      </div>
+
+      {/* Author */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+          marginBottom: "32px",
+        }}
+      >
+        {/* biome-ignore lint/performance/noImgElement: OpenGraph image generation */}
+        <img
+          alt="Bryce Bjork"
+          height={64}
+          src={`data:image/jpeg;base64,${Buffer.from(profileImageData).toString(
+            "base64"
+          )}`}
+          style={{
+            borderRadius: "50%",
+          }}
+          width={64}
+        />
+        <div
+          style={{
+            fontSize: 32,
+            fontFamily: "STIX Two Text",
+            fontWeight: 400,
+            color: "#52525b", // zinc-600
+          }}
+        >
+          Bryce Bjork
+        </div>
       </div>
 
       {/* Article teaser */}
