@@ -7,9 +7,9 @@ If you're designing a system, you might ask: should I abstract this function, ou
 
 Of course, there are exceptions... but often the hidden costs of abstraction are greater than the obvious benefits.[^1]
 
-Abstraction makes building harder. It spreads interelated logic. It forces you to name variables. It makes your code brittle. A small change in an abstraction can cause big damage.
+Abstraction makes building harder. It fragments interrelated logic. It forces you to prematurely name variables. It makes your code brittle. A small change in an abstraction can cause big damage.
 
 Instead, I believe in the **power of colocation**. Things that work together belong together. Reject abstraction and embrace colocation.[^2]
 
-[^1]: Colocation is only possible with the right hidden abstractions. [Tailwind](https://tailwindcss.com) enables colocation by abstracting class names. [Next.js](https://nextjs.org) enables colocation by abstracting routing and compilation. Hidden abstractions enable simplicity, but it's up to you to take advantage!
+[^1]: Colocation is only possible with the right foundational abstractions. [Tailwind](https://tailwindcss.com) enables colocation by abstracting class names. [Next.js](https://nextjs.org) enables colocation by abstracting the build pipeline. While hidden abstractions simplify your workflow, manual abstractions often introduce unexpected friction.
 [^2]: Colocate your software, business, and life. Flat teams perform better than layered ones. Distributed supply chains are more brittle than colocated ones.
