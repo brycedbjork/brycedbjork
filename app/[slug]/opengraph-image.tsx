@@ -87,80 +87,76 @@ export default async function Image({
   ]);
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        backgroundColor: "#fafafa", // zinc-50
+        padding: "70px 80px",
+      }}
+    >
+      {/* Title */}
       <div
         style={{
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          backgroundColor: "#fafafa", // zinc-50
-          padding: "70px 80px",
+          fontSize: 88,
+          fontFamily: "STIX Two Text",
+          fontWeight: 700,
+          color: "#18181b", // zinc-900
+          lineHeight: 1.1,
+          letterSpacing: "-0.02em",
+          marginBottom: "24px",
         }}
       >
-        {/* Title */}
-        <div
-          style={{
-            fontSize: 88,
-            fontFamily: "STIX Two Text",
-            fontWeight: 700,
-            color: "#18181b", // zinc-900
-            lineHeight: 1.1,
-            letterSpacing: "-0.02em",
-            marginBottom: "24px",
-          }}
-        >
-          {metadata.title}
-        </div>
+        {metadata.title}
+      </div>
 
-        {/* Author */}
-        <div
+      {/* Author */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+          marginBottom: "32px",
+        }}
+      >
+        {/* biome-ignore lint/performance/noImgElement: OpenGraph image generation */}
+        <img
+          alt="Bryce Bjork"
+          height={64}
+          src={`data:image/jpeg;base64,${profileImageData.toString("base64")}`}
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-            marginBottom: "32px",
+            borderRadius: "50%",
           }}
-        >
-          {/* biome-ignore lint/performance/noImgElement: OpenGraph image generation */}
-          <img
-            alt="Bryce Bjork"
-            height={64}
-            src={`data:image/jpeg;base64,${profileImageData.toString(
-              "base64"
-            )}`}
-            style={{
-              borderRadius: "50%",
-            }}
-            width={64}
-          />
-          <div
-            style={{
-              fontSize: 32,
-              fontFamily: "STIX Two Text",
-              fontWeight: 400,
-              color: "#52525b", // zinc-600
-            }}
-          >
-            Bryce Bjork
-          </div>
-        </div>
-
-        {/* Article teaser */}
+          width={64}
+        />
         <div
           style={{
             fontSize: 32,
             fontFamily: "STIX Two Text",
             fontWeight: 400,
             color: "#52525b", // zinc-600
-            lineHeight: 1.6,
           }}
         >
-          {teaser}
+          Bryce Bjork
         </div>
       </div>
-    ),
+
+      {/* Article teaser */}
+      <div
+        style={{
+          fontSize: 32,
+          fontFamily: "STIX Two Text",
+          fontWeight: 400,
+          color: "#52525b", // zinc-600
+          lineHeight: 1.6,
+        }}
+      >
+        {teaser}
+      </div>
+    </div>,
     {
       ...size,
       fonts: [
