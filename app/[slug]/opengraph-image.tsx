@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { getPost } from "@/app/lib/posts";
@@ -54,8 +56,13 @@ export default async function Image({
   const { metadata, content } = post;
   const teaser = extractTeaser(content);
 
-  // Load STIX Two Text fonts and profile image
-  const [stixRegularCss, stixBoldCss, profileImageData] = await Promise.all([
+  // Load profile image from local filesystem
+  const profileImageData = readFileSync(
+    join(process.cwd(), "public", "bryce.jpg")
+  );
+
+  // Load STIX Two Text fonts
+  const [stixRegularCss, stixBoldCss] = await Promise.all([
     fetch(
       "https://fonts.googleapis.com/css2?family=STIX+Two+Text:wght@400&display=swap",
       { headers: { "User-Agent": "Mozilla/5.0" } }
@@ -64,7 +71,6 @@ export default async function Image({
       "https://fonts.googleapis.com/css2?family=STIX+Two+Text:wght@700&display=swap",
       { headers: { "User-Agent": "Mozilla/5.0" } }
     ).then((res) => res.text()),
-    fetch("https://brycedbjork.com/bryce.jpg").then((res) => res.arrayBuffer()),
   ]);
 
   // Extract the font URLs from the CSS
@@ -81,78 +87,80 @@ export default async function Image({
   ]);
 
   return new ImageResponse(
-    <div
-      style={{
-        height: "100%",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        backgroundColor: "#fafafa", // zinc-50
-        padding: "70px 80px",
-      }}
-    >
-      {/* Title */}
+    (
       <div
         style={{
-          fontSize: 88,
-          fontFamily: "STIX Two Text",
-          fontWeight: 700,
-          color: "#18181b", // zinc-900
-          lineHeight: 1.1,
-          letterSpacing: "-0.02em",
-          marginBottom: "24px",
-        }}
-      >
-        {metadata.title}
-      </div>
-
-      {/* Author */}
-      <div
-        style={{
+          height: "100%",
+          width: "100%",
           display: "flex",
-          alignItems: "center",
-          gap: "16px",
-          marginBottom: "32px",
+          flexDirection: "column",
+          justifyContent: "center",
+          backgroundColor: "#fafafa", // zinc-50
+          padding: "70px 80px",
         }}
       >
-        {/* biome-ignore lint/performance/noImgElement: OpenGraph image generation */}
-        <img
-          alt="Bryce Bjork"
-          height={64}
-          src={`data:image/jpeg;base64,${Buffer.from(profileImageData).toString(
-            "base64"
-          )}`}
+        {/* Title */}
+        <div
           style={{
-            borderRadius: "50%",
+            fontSize: 88,
+            fontFamily: "STIX Two Text",
+            fontWeight: 700,
+            color: "#18181b", // zinc-900
+            lineHeight: 1.1,
+            letterSpacing: "-0.02em",
+            marginBottom: "24px",
           }}
-          width={64}
-        />
+        >
+          {metadata.title}
+        </div>
+
+        {/* Author */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "16px",
+            marginBottom: "32px",
+          }}
+        >
+          {/* biome-ignore lint/performance/noImgElement: OpenGraph image generation */}
+          <img
+            alt="Bryce Bjork"
+            height={64}
+            src={`data:image/jpeg;base64,${profileImageData.toString(
+              "base64"
+            )}`}
+            style={{
+              borderRadius: "50%",
+            }}
+            width={64}
+          />
+          <div
+            style={{
+              fontSize: 32,
+              fontFamily: "STIX Two Text",
+              fontWeight: 400,
+              color: "#52525b", // zinc-600
+            }}
+          >
+            Bryce Bjork
+          </div>
+        </div>
+
+        {/* Article teaser */}
         <div
           style={{
             fontSize: 32,
             fontFamily: "STIX Two Text",
             fontWeight: 400,
             color: "#52525b", // zinc-600
+            lineHeight: 1.6,
           }}
         >
-          Bryce Bjork
+          {teaser}
         </div>
       </div>
-
-      {/* Article teaser */}
-      <div
-        style={{
-          fontSize: 32,
-          fontFamily: "STIX Two Text",
-          fontWeight: 400,
-          color: "#52525b", // zinc-600
-          lineHeight: 1.6,
-        }}
-      >
-        {teaser}
-      </div>
-    </div>,
+    ),
     {
       ...size,
       fonts: [
