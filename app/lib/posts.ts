@@ -9,7 +9,13 @@ export interface PostMetadata {
   updated?: string;
 }
 
+// Slugs map directly to files in content/, so only allow simple names
+const SLUG_REGEX = /^[a-z0-9-]+$/i;
+
 export function getPost(slug: string) {
+  if (!SLUG_REGEX.test(slug)) {
+    return null;
+  }
   const filePath = path.join(process.cwd(), "content", `${slug}.mdx`);
   if (!fs.existsSync(filePath)) {
     return null;
